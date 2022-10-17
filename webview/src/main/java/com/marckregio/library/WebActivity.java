@@ -10,26 +10,30 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.marckregio.webview.R;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.fmdc.webview.R;
 
 public class WebActivity extends AppCompatActivity {
 
     private WebView mainWebview;
     private ProgressBar progress;
     private String mainUrl = "https://google.com";
+    private FloatingActionButton fab_msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainWebview = (WebView) findViewById(R.id.mainwebview);
-        progress = (ProgressBar) findViewById(R.id.progress);
+        mainWebview = findViewById(R.id.mainwebview);
+        progress = findViewById(R.id.progress);
         mainUrl = getResources().getString(R.string.web_url);
+        fab_msg = findViewById(R.id.fab_msg);
         setUpWebView(mainWebview);
     }
 

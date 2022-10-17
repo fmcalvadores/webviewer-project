@@ -15,6 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:fab_icon="@mipmap/ic_fab_ico_round"
+            android:id="@+id/fab_msg"
+            />
+
         <ProgressBar
             android:id="@+id/progress"
             style="?android:attr/progressBarStyleHorizontal"

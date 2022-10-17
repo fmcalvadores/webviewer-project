@@ -1,4 +1,4 @@
-package com.marckregio.webview;
+package com.fmdc.webview;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
@@ -17,7 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.marckregio.library.WebActivity;
+import com.fmdc.library.WebActivity;
 
 public class MainActivity extends WebActivity {
 
