@@ -1,4 +1,4 @@
-package com.marckregio.library;
+package com.fmdc.library;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,7 +10,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +45,7 @@ public class WebActivity extends AppCompatActivity {
             return super.onKeyDown(keyCode, event);
         }
     }
+
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setUpWebView(WebView wv) {
