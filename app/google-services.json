@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "665018796488",
+    "project_id": "fir-backendurlchanger",
+    "storage_bucket": "fir-backendurlchanger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665018796488:android:49017e64725b025e0a58fd",
+        "android_client_info": {
+          "package_name": "com.fmdc.webview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "665018796488-sl6qll07rjvb7ncfaqc5mhdjd02vip1u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fmdc.webview",
+            "certificate_hash": "f9baa7ecab8fb42e6ba85fdd9dfc6a8016168f72"
+          }
+        },
+        {
+          "client_id": "665018796488-h4j9hq8p1n162r0vtapouoohgj7h9ndf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwnZPl7ADSWfPZ7Cl7ekjBx4TL8LYOpVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "665018796488-h4j9hq8p1n162r0vtapouoohgj7h9ndf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

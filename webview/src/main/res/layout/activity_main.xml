@@ -21,6 +21,7 @@
             android:layout_gravity="bottom|end"
             app:fab_icon="@mipmap/ic_fab_ico_round"
             android:id="@+id/fab_msg"
+            android:visibility="gone"
             />
 
         <ProgressBar
