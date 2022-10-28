@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -16,25 +14,15 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fmdc.library.model.UrlModel;
 import com.fmdc.library.network.DetectConnection;
 import com.fmdc.library.network.GetUrlService;
 import com.fmdc.library.network.RetrofitClientInstance;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,11 +30,10 @@ import retrofit2.Response;
 
 public class WebActivity extends AppCompatActivity {
 
-    private WebView mainWebview;
+    private WebView mainWebView;
     private ProgressBar progress;
-    private String mainUrl = "https://google.com";
-    //private FloatingActionButton fab_msg;
-
+    private String mainUrl;
+    private boolean isOnline;
     ProgressDialog progressDialog;
 
     @Override
@@ -54,123 +41,64 @@ public class WebActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!DetectConnection.checkInternetConnection(this)) {
-            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-        } else{
+        mainWebView = findViewById(R.id.mainwebview);
+        progress = findViewById(R.id.progress);
+        mainUrl = getResources().getString(R.string.web_url);
 
-//            mainWebview = findViewById(R.id.mainwebview);
-//            progress = findViewById(R.id.progress);
-//            mainUrl = getResources().getString(R.string.web_url);
-//            //fab_msg = findViewById(R.id.fab_msg);
-//            setUpWebView(mainWebview);
+        if(!DetectConnection.checkInternetConnection(this)) {
+            isOnline = false;
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+            setUpWebView(mainWebView);
+        } else{
+            isOnline = true;
 
             progressDialog = new ProgressDialog(WebActivity.this);
             progressDialog.setMessage("Loading...");
             progressDialog.show();
 
-            String BASE_URL = "https://fmcalvadores.github.io/urlchangerapi/url.json";
-            new JsonTask().execute(BASE_URL);
+            GetUrlService service = RetrofitClientInstance.getRetrofitInstance().create(GetUrlService.class);
+            Call<UrlModel> call = service.getUrlFromService();
+            call.enqueue(new Callback<UrlModel>() {
+                @Override
+                public void onResponse(@NonNull Call<UrlModel> call, @NonNull Response<UrlModel> response) {
+                    progressDialog.dismiss();
 
-//            GetUrlService service = RetrofitClientInstance.getRetrofitInstance().create(GetUrlService.class);
-//            Call<UrlModel> call = service.getUrlFromService();
-//            call.enqueue(new Callback<UrlModel>() {
-//                @Override
-//                public void onResponse(Call<UrlModel> call, Response<UrlModel> response) {
-//                    progressDialog.dismiss();
-//Log.d("TEST", response.errorBody().toString());
-//                    if(response.isSuccessful()){
-//                        mainWebview = findViewById(R.id.mainwebview);
-//                        progress = findViewById(R.id.progress);
-//                        mainUrl = response.body().getURL();
-//                        //fab_msg = findViewById(R.id.fab_msg);
-//                        setUpWebView(mainWebview);
-//                    }
-//
-//                    getURL(response.body());
-//                }
-//
-//                @Override
-//                public void onFailure(Call<UrlModel> call, Throwable t) {
-//                    progressDialog.dismiss();
-//                    Toast.makeText(WebActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
-//                }
-//            });
+                    if(response.isSuccessful()){
+                        if (response.body() != null)
+                            getURL(response.body());
+                    } else {
+                        UrlModel model = new UrlModel(mainUrl,"");
+                        getURL(model);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<UrlModel> call, @NonNull Throwable t) {
+                    progressDialog.dismiss();
+                    Toast.makeText(WebActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
     private void getURL(UrlModel urlModel) {
-
-    }
-
-    private class JsonTask extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        if (urlModel.getURL() != null || !Objects.equals(urlModel.getURL(), "")){
+            mainUrl = urlModel.getURL();
         }
 
-        @Override
-        protected String doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
+        setUpWebView(mainWebView);
 
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                InputStream stream = connection.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(stream));
-                StringBuilder buffer = new StringBuilder();
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line).append("\n");
-                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
-                }
-                return buffer.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            try {
-                JSONObject jsonObject = new JSONObject(result);
-                mainUrl  = jsonObject.getString("url");
-                String dateModified  = jsonObject.getString("dateModified");
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-        }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && this.mainWebview.canGoBack()) {
-            this.mainWebview.goBack();
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && this.mainWebView.canGoBack()) {
+            this.mainWebView.goBack();
             return false;
         } else {
             return super.onKeyDown(keyCode, event);
         }
     }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setUpWebView(WebView wv) {
@@ -178,11 +106,18 @@ public class WebActivity extends AppCompatActivity {
         wv.setWebViewClient(new WVClient(this));
         wv.setWebChromeClient(new WCClient());
 
-        wv.loadUrl(mainUrl);
+        if (isOnline){
+            wv.loadUrl(mainUrl);
+        } else {
+            String htmldata = "<div style='display:block;margin:auto;padding-top:250px;text-align:center;'><H1>NO INTERNET CONNECTION!</H1><p style='color:gray;'>Please check your internet connectivity.</p></div>";
+            wv.loadDataWithBaseURL("file:///android_res/drawable/",htmldata,"text/html", "utf-8", null);
+        }
+
+
     }
 
     private class WVClient extends WebViewClient {
-        private Activity activity = null;
+        private final Activity activity;
         public  WVClient(Activity activity){
             this.activity = activity;
         }

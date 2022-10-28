@@ -9,8 +9,7 @@ public class RetrofitClientInstance {
 
     public static Retrofit getRetrofitInstance(){
         if (retrofit == null){
-            //String BASE_URL = "https://web-url-changer.herokuapp.com";
-            String BASE_URL = "https://fmcalvadores.github.io/urlchangerapi/";
+            String BASE_URL = "https://fmcalvadores.github.io/";
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -19,4 +18,3 @@ public class RetrofitClientInstance {
         return retrofit;
     }
 }
-

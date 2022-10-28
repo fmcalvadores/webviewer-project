@@ -7,6 +7,6 @@ import retrofit2.http.GET;
 
 public interface GetUrlService {
 
-    @GET("/url.json")
+    @GET("/urlchangerapi/url.json")
     Call<UrlModel> getUrlFromService();
 }
