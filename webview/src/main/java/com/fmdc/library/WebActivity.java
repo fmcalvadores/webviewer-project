@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -23,6 +24,7 @@ import com.fmdc.library.network.GetUrlService;
 import com.fmdc.library.network.RetrofitClientInstance;
 
 import java.util.Objects;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +61,7 @@ public class WebActivity extends AppCompatActivity {
             GetUrlService service = RetrofitClientInstance.getRetrofitInstance().create(GetUrlService.class);
             Call<UrlModel> call = service.getUrlFromService();
             call.enqueue(new Callback<UrlModel>() {
+                
                 @Override
                 public void onResponse(@NonNull Call<UrlModel> call, @NonNull Response<UrlModel> response) {
                     progressDialog.dismiss();
@@ -81,9 +84,23 @@ public class WebActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mainWebView.onPause();
+    }
+
     private void getURL(UrlModel urlModel) {
         if (urlModel.getURL() != null || !Objects.equals(urlModel.getURL(), "")){
-            mainUrl = urlModel.getURL();
+           // String testurl= "https://getbootstrap.com/docs/5.2/getting-started/introduction/";
+            //Uri uri = Uri.parse(testurl);
+            //String server = uri.getAuthority();
+            //String path = uri.getPath();
+            //String protocol = uri.getScheme();
+            //Set<String> args = uri.getQueryParameterNames();
+            //StringBuilder url = new StringBuilder();
+            mainUrl = urlModel.getURL();// url.append(protocol).append("://").append(server).append(path).toString();
+            //Log.d("Test", protocol);
         }
 
         setUpWebView(mainWebView);
@@ -107,7 +124,8 @@ public class WebActivity extends AppCompatActivity {
         wv.setWebChromeClient(new WCClient());
 
         if (isOnline){
-            wv.loadUrl(mainUrl);
+            wv.loadUrl("https://www.youtube.com/watch?v=5Od6S5xyz08");
+           // wv.loadDataWithBaseURL(mainUrl,"code=JKQXCN","text/html","utf-8",null);
         } else {
             String htmldata = "<div style='display:block;margin:auto;padding-top:250px;text-align:center;'><H1>NO INTERNET CONNECTION!</H1><p style='color:gray;'>Please check your internet connectivity.</p></div>";
             wv.loadDataWithBaseURL("file:///android_res/drawable/",htmldata,"text/html", "utf-8", null);

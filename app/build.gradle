@@ -10,14 +10,18 @@ android {
         multiDexEnabled true
         minSdk 25
         targetSdk 32
-        versionCode 3
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.build2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

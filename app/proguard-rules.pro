@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+-keep class com.fmdc.** {*;}
+-keep class com.squareup.okhttp.** {*;}
+-keep class com.jakewharton.picasso.** {*;}
+-keep class retrofit2.** {*;}
+
+-dontwarn com.squareup.okhttp.**
+-dontwarn com.jakewharton.picasso.**
+-dontwarn retrofit2.**
+
+-keepattributes Exceptions
+-keepattributes Signature
