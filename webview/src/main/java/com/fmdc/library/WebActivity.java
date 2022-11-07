@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -24,7 +23,6 @@ import com.fmdc.library.network.GetUrlService;
 import com.fmdc.library.network.RetrofitClientInstance;
 
 import java.util.Objects;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,15 +90,7 @@ public class WebActivity extends AppCompatActivity {
 
     private void getURL(UrlModel urlModel) {
         if (urlModel.getURL() != null || !Objects.equals(urlModel.getURL(), "")){
-           // String testurl= "https://getbootstrap.com/docs/5.2/getting-started/introduction/";
-            //Uri uri = Uri.parse(testurl);
-            //String server = uri.getAuthority();
-            //String path = uri.getPath();
-            //String protocol = uri.getScheme();
-            //Set<String> args = uri.getQueryParameterNames();
-            //StringBuilder url = new StringBuilder();
-            mainUrl = urlModel.getURL();// url.append(protocol).append("://").append(server).append(path).toString();
-            //Log.d("Test", protocol);
+            mainUrl = urlModel.getURL();
         }
 
         setUpWebView(mainWebView);
@@ -120,18 +110,16 @@ public class WebActivity extends AppCompatActivity {
     @SuppressLint("SetJavaScriptEnabled")
     private void setUpWebView(WebView wv) {
         wv.getSettings().setJavaScriptEnabled(true);
+        wv.getSettings().setDomStorageEnabled(true);
         wv.setWebViewClient(new WVClient(this));
         wv.setWebChromeClient(new WCClient());
 
         if (isOnline){
-            wv.loadUrl("https://www.youtube.com/watch?v=5Od6S5xyz08");
-           // wv.loadDataWithBaseURL(mainUrl,"code=JKQXCN","text/html","utf-8",null);
+            wv.loadUrl(mainUrl);
         } else {
-            String htmldata = "<div style='display:block;margin:auto;padding-top:250px;text-align:center;'><H1>NO INTERNET CONNECTION!</H1><p style='color:gray;'>Please check your internet connectivity.</p></div>";
-            wv.loadDataWithBaseURL("file:///android_res/drawable/",htmldata,"text/html", "utf-8", null);
+            String htmlData = "<div style='display:block;margin:auto;padding-top:250px;text-align:center;'><H1>NO INTERNET CONNECTION!</H1><p style='color:gray;'>Please check your internet connectivity.</p></div>";
+            wv.loadDataWithBaseURL("file:///android_res/drawable/",htmlData,"text/html", "utf-8", null);
         }
-
-
     }
 
     private class WVClient extends WebViewClient {
