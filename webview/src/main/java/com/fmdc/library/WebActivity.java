@@ -88,6 +88,12 @@ public class WebActivity extends AppCompatActivity {
         mainWebView.onPause();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mainWebView.onResume();
+    }
+
     private void getURL(UrlModel urlModel) {
         if (urlModel.getURL() != null || !Objects.equals(urlModel.getURL(), "")){
             mainUrl = urlModel.getURL();
